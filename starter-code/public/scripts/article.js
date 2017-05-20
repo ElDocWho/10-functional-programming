@@ -8,6 +8,7 @@ var app = app || {};
 // At the very end of the code, but still inside the IIFE, attach the 'Article' object to 'module'.
 // Where the IIFE is invoked, pass in the global 'app' object that is defined above.
 (function(module){
+
   function Article(rawDataObj) {
     /* REVIEW: In lab 8, we explored a lot of new functionality going on here. Let's re-examine
     the concept of context.
@@ -43,7 +44,7 @@ var app = app || {};
   // of functions. So if we set a variable equal to the result of a .map, it will be our transformed array.
   // There is no need to push to anything.
 
-    Article.all = rawData.map(function(ele) {
+    Article.all = rows.map(function(ele) {
       return new Article(ele);
     });
   };
@@ -59,16 +60,25 @@ var app = app || {};
   };
 
 // TODO: Chain together a `map` and a `reduce` call to get a rough count of all words in all articles.
-  Article.numWordsAll = () => {
-    return Article.all.map().reduce()
-  };
 
+
+  Article.numWordsAll = () => {
+  //   return Article.all.map().reduce()
+  // };
+    return Article.all.map(article => article.body.split(' ').length).reduce((acc, val) => acc + val);
+  };
 // TODO: Chain together a `map` and a `reduce` call to produce an array of unique author names. You will
 // probably need to use the optional accumulator argument in your reduce call.
+  // Article.numWordsAll.map((articles) => articles.body.split(' ').length).reduce((acc, cur)=> acc + cur);
+  // Article.allAuthors = () => {
+  //   return Article.all.map().reduce();
+  // };
   Article.allAuthors = () => {
-    return Article.all.map().reduce();
+    return Article.all.map(article => article.author).reduce((acc, val) => {
+      if (acc.indexOf(val) < 0 ) { acc.push(val); }
+      return acc;
+    },[]);
   };
-
   Article.numWordsByAuthor = () => {
     return Article.allAuthors().map(author => {
       // TODO: Transform each author string into an object with properties for
@@ -79,6 +89,11 @@ var app = app || {};
       // some combination of filter, map, and reduce to get the value for the second
       // property.
 
+      let words = Article.all.filter(article => article.author === author).map(article => article.body.split(' ').length).reduce((acc, val) => acc + val);
+      return {
+        name: author,
+        wordCount: words
+      };
     })
   };
 
@@ -126,4 +141,5 @@ var app = app || {};
     .then(console.log)
     .then(callback);
   };
-});(app)
+  module.Article = Article;
+})(app)
