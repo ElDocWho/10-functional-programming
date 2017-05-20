@@ -88,12 +88,6 @@ var app = app || {};
       // The first property should be pretty straightforward, but you will need to chain
       // some combination of filter, map, and reduce to get the value for the second
       // property.
-//       Article.numWordsAllByAuthor.map((authors) => authors.body.split(' ').length).reduce((acc, cur)=> acc + cur);
-//       Article.allAuthors = () => {
-//         return Article.all.map().reduce();
-//     }
-//   }
-// };
 
       let words = Article.all.filter(article => article.author === author).map(article => article.body.split(' ').length).reduce((acc, val) => acc + val);
       return {
